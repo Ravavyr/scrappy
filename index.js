@@ -4,7 +4,7 @@ const fs = require('fs');
 const fsPromises = require('fs').promises;
 
 /*global links variables */
-const sitelinks = new Set();
+let sitelinks = new Set();
 const externallinks = new Set();
 
 (async () => {
@@ -53,6 +53,9 @@ const externallinks = new Set();
     const browser = await puppeteer.launch({ headless: true, 'ignoreHTTPSErrors': true });
 
     async function process_url(pageurl) {
+        if (sitelinks.has(pageurl)) {
+            return;
+        }
         sitelinks.add(pageurl);
         // Instructs the blank page to navigate a URL
         let page = await browser.newPage();
@@ -85,7 +88,7 @@ const externallinks = new Set();
 
         let ct = urls.length;
 
-        const promises = []
+        const promises = [];
         for (let i = 0; i < ct; i++) {
             if (!sitelinks.has(urls[i]) && urls[i].startsWith(protocol + '://' + sitedomain)) {/* process internal urls only */
                 //console.log(urls[i]);

@@ -7,7 +7,7 @@ const fsPromises = require('fs').promises;
 
     const args = process.argv.slice(2);
     const siteurl = args[0];
-    
+
     const splits = siteurl.split('://');
     const protocol = splits[0];
 
@@ -31,7 +31,7 @@ const fsPromises = require('fs').promises;
                 }
             }).catch((error) => {
                 //console.log('error',error);
-            });        
+            });
         }
 
         fs.writeFile('data/dns.txt', JSON.stringify(dnsinfo), err => {
@@ -39,14 +39,17 @@ const fsPromises = require('fs').promises;
                 console.error(err)
                 return
             }
-            console.log("dns data saved")
+            console.log("DNS data saved");
         });
     }
 
-    /*global links var */
+    /*global links variables */
     const sitelinks=[];
+    const externallinks=[];
 
     /*Begin Crawler*/
+    console.log("Starting Crawler");
+    const starttime = new Date();
     const browser = await puppeteer.launch({headless:true,'ignoreHTTPSErrors':true});
 
     async function process_url(pageurl){
@@ -64,7 +67,7 @@ const fsPromises = require('fs').promises;
             await page.waitForSelector('title');
             const title = await page.title();
 
-            console.log(`The title is: ${title}`);
+            //console.log(`The title is: ${title}`);
 
             /*capture console errors/messages*/
             await page
@@ -81,22 +84,39 @@ const fsPromises = require('fs').promises;
             /*Get all urls on current page.*/
             let urls = await page.$$eval('a', as => as.map(a => a.href));
 
-            console.log(urls);
             let ct=urls.length;
-            console.log(ct);
-            
             for(let i=0; i<ct; i++){
-                console.log(i);
-                console.log(urls[i]);
-                if(!sitelinks.includes(urls[i]) && urls[i].indexOf(sitedomain)>-1){/* process internal urls only */
+                if(!sitelinks.includes(urls[i]) && urls[i].startsWith(protocol+'://'+sitedomain)){/* process internal urls only */
+                    //console.log(urls[i]);
                     await process_url(urls[i]);
+                }else{
+                    if(!urls[i].startsWith(protocol+'://'+sitedomain)){
+                        externallinks.push(urls[i]);
+                    }
                 }
             }
         }
     }
     await process_url(siteurl);
-    console.log("lastlinks",sitelinks);
-    
+
+    await fs.writeFile('data/sitelinks.txt', JSON.stringify(sitelinks), err => {
+        if (err) {
+            console.error(err);
+            return
+        }
+        console.log("sitelinks saved");
+    });
+
+    await fs.writeFile('data/externallinks.txt', JSON.stringify(externallinks), err => {
+        if (err) {
+            console.error(err);
+            return
+        }
+        console.log("externallinks saved");
+    });
 
     browser.close();
+    console.log("Crawler End.");
+    const endtime = new Date();
+    console.log("Crawl Duration: "+((endtime-starttime)/1000)+" seconds.");
 })();

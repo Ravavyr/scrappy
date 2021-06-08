@@ -70,8 +70,8 @@ const externallinks = new Set();
 
         /*capture console errors/messages*/
         await page
-            .on('console', message => console.log(`${message.type().substr(0, 3).toUpperCase()} ${message.text()}`))
-            .on('pageerror', ({ message }) => console.log(message))
+            .on('console', message => console.log(`${message.type().substr(0, 3).toUpperCase()} ${message.text()}`+' --- '+pageurl))
+            .on('pageerror', ({ message }) => console.log(message +' --- '+pageurl))
             .on('response', function (response) {
                 //console.log(`${response.status()} ${response.url()}`);
             })
@@ -108,7 +108,7 @@ const externallinks = new Set();
             console.error(err);
             return
         }
-        console.log("sitelinks saved");
+        console.log(sitelinks.length+" Site Links saved");
     });
 
     await fs.writeFile('data/externallinks.txt', JSON.stringify(Array.from(externallinks), null, 2), err => {
@@ -116,7 +116,7 @@ const externallinks = new Set();
             console.error(err);
             return
         }
-        console.log("externallinks saved");
+        console.log(externallinks.length+" External Links saved");
     });
 
     browser.close();

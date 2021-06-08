@@ -1,0 +1,14 @@
+{
+  "name": "Scrappy",
+  "version": "0.0.1",
+  "description": "A website crawler for generating sitemaps.",
+  "main": "index.js",
+  "scripts": {
+    "test": "\"node index.js\""
+  },
+  "author": "Ravavyr",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^8.0.0"
+  }
+}

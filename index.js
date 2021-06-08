@@ -4,7 +4,7 @@ const fs = require('fs');
 const fsPromises = require('fs').promises;
 
 /*global links variables */
-let sitelinks = new Set();
+const sitelinks = new Set();
 const externallinks = new Set();
 
 (async () => {

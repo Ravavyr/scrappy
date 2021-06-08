@@ -44,7 +44,7 @@ const fsPromises = require('fs').promises;
     }
 
     /*global links var */
-    let sitelinks=[];
+    const sitelinks=[];
 
     /*Begin Crawler*/
     const browser = await puppeteer.launch({headless:true,'ignoreHTTPSErrors':true});

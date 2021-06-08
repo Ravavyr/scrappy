@@ -51,7 +51,7 @@ const fsPromises = require('fs').promises;
 
     async function process_url(pageurl){
         if(!sitelinks.includes(pageurl)){
-
+            sitelinks.push(pageurl);
             // Instructs the blank page to navigate a URL
             let page = await browser.newPage();
             //set user agent
@@ -85,15 +85,13 @@ const fsPromises = require('fs').promises;
             let ct=urls.length;
             console.log(ct);
             
-            let forLoop = async _ => {
-                for(let i=0; i<ct; i++){
-                    console.log(i);
-                    console.log(urls[i]);
-                    if(!sitelinks.includes(urls[i]) && urls[i].indexOf(sitedomain)>-1){/* process internal urls only */
-                        await process_url(urls[i]);
-                    }
+            for(let i=0; i<ct; i++){
+                console.log(i);
+                console.log(urls[i]);
+                if(!sitelinks.includes(urls[i]) && urls[i].indexOf(sitedomain)>-1){/* process internal urls only */
+                    await process_url(urls[i]);
                 }
-            };
+            }
         }
     }
     await process_url(siteurl);

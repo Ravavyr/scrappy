@@ -111,7 +111,7 @@ const externallinks = new Set();
             console.error(err);
             return
         }
-        console.log(sitelinks.length+" Site Links saved");
+        console.log(sitelinks.size+" Site Links saved");
     });
 
     await fs.writeFile('data/externallinks.txt', JSON.stringify(Array.from(externallinks), null, 2), err => {
@@ -119,7 +119,7 @@ const externallinks = new Set();
             console.error(err);
             return
         }
-        console.log(externallinks.length+" External Links saved");
+        console.log(externallinks.size+" External Links saved");
     });
 
     browser.close();

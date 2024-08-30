@@ -9,6 +9,6 @@
   "author": "Ravavyr",
   "license": "ISC",
   "dependencies": {
-    "puppeteer": "^8.0.0"
+    "puppeteer": "^19.0.0"
   }
 }
